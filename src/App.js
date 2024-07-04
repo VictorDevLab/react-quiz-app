@@ -4,6 +4,7 @@ import Header from "./Header";
 import Main from "./Main";
 import Loader from "./Loader";
 import Error from "./Error";
+import StartScreen from "./StartScreen";
 
 const initialState = {
   questions: [],
@@ -35,6 +36,8 @@ export default function App() {
   //normal destructuring
   // const {questions, status} = state
 
+  const numQuestions = questions?.length;
+  console.log("wfrew", numQuestions);
   useEffect(() => {
     fetch("http://localhost:8000/questions")
       .then((res) => res.json())
@@ -51,7 +54,7 @@ export default function App() {
         {/* mutually exclusive, meaning only one will be true */}
         {status === "loading" && <Loader />}
         {status === "error" && <Error />}
-        {/* {status === "ready" && <Loader />} */}
+        {status === "ready" && <StartScreen numQuestions={numQuestions} />}
       </Main>
     </div>
   );
