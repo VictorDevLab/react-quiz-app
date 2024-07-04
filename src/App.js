@@ -2,6 +2,8 @@ import { useReducer, useEffect } from "react";
 
 import Header from "./Header";
 import Main from "./Main";
+import Loader from "./Loader";
+import Error from "./Error";
 
 const initialState = {
   questions: [],
@@ -28,7 +30,10 @@ function reducer(state, action) {
 }
 
 export default function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  //nested destructuring.. WOW WOW Learnt this today
+  const [{ questions, status }, dispatch] = useReducer(reducer, initialState);
+  //normal destructuring
+  // const {questions, status} = state
 
   useEffect(() => {
     fetch("http://localhost:8000/questions")
@@ -43,8 +48,10 @@ export default function App() {
     <div className="app">
       <Header />
       <Main>
-        <p>1/15</p>
-        <p>Questions</p>
+        {/* mutually exclusive, meaning only one will be true */}
+        {status === "loading" && <Loader />}
+        {status === "error" && <Error />}
+        {/* {status === "ready" && <Loader />} */}
       </Main>
     </div>
   );
