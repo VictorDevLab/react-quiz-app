@@ -13,7 +13,8 @@ const initialState = {
   status: "loading",
   //index of question you are on
   index: 0,
-  answer: null
+  answer: null,
+  points: 0
 };
 
 function reducer(state, action) {
@@ -36,9 +37,15 @@ function reducer(state, action) {
     }
    }
    case "newAnswer": {
+    //get the current question, and  give points
+    const answeredQuestion = state.questions.at(state.index)
+
     return {
       ...state,
       answer: action.payload.answer,
+      points: action.payload.answer === answeredQuestion.correctOption? state.points + answeredQuestion.points : state.points,
+      index: state.index + 1,
+      answer: null,
     }
    }
     default:
