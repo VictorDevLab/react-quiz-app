@@ -12,7 +12,8 @@ const initialState = {
   //loading, ready, error, active, finished.
   status: "loading",
   //index of question you are on
-  index: 0
+  index: 0,
+  answer: null
 };
 
 function reducer(state, action) {
@@ -34,6 +35,12 @@ function reducer(state, action) {
       status: "active",
     }
    }
+   case "newAnswer": {
+    return {
+      ...state,
+      answer: action.payload.answer,
+    }
+   }
     default:
       throw new Error("action unknown");
   }
@@ -41,7 +48,7 @@ function reducer(state, action) {
 
 export default function App() {
   //nested destructuring.. WOW WOW Learnt this today
-  const [{ questions, status, index }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index, answer }, dispatch] = useReducer(reducer, initialState);
   //normal destructuring
   // const {questions, status} = state
 
@@ -66,7 +73,7 @@ export default function App() {
         {status === "loading" && <Loader />}
         {status === "error" && <Error />}
         {status === "ready" && <StartScreen numQuestions={numQuestions} dispatch={dispatch} />}
-        {status === "active" && <Question question={questions[index]} />}
+        {status === "active" && <Question question={questions[index]} dispatch={dispatch} answer={answer} />}
       </Main>
     </div>
   );
