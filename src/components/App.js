@@ -14,7 +14,7 @@ const initialState = {
   //index of question you are on
   index: 0,
   answer: null,
-  points: 0
+  points: 0,
 };
 
 function reducer(state, action) {
@@ -30,24 +30,32 @@ function reducer(state, action) {
         ...state,
         status: "error",
       };
-   case "start": {
-    return {
-      ...state,
-      status: "active",
+    case "start": {
+      return {
+        ...state,
+        status: "active",
+      };
     }
-   }
-   case "newAnswer": {
-    //get the current question, and  give points
-    const answeredQuestion = state.questions.at(state.index)
+    case "newAnswer": {
+      //get the current question, and  give points
+      const answeredQuestion = state.questions.at(state.index);
 
-    return {
-      ...state,
-      answer: action.payload.answer,
-      points: action.payload.answer === answeredQuestion.correctOption? state.points + answeredQuestion.points : state.points,
-      index: state.index + 1,
-      answer: null,
+      return {
+        ...state,
+        answer: action.payload.answer,
+        points:
+          action.payload.answer === answeredQuestion.correctOption
+            ? state.points + answeredQuestion.points
+            : state.points,
+      };
     }
-   }
+    case "nextQuestion": {
+      return {
+        ...state,
+        index: state.index + 1,
+        answer: null,
+      };
+    }
     default:
       throw new Error("action unknown");
   }
@@ -55,20 +63,21 @@ function reducer(state, action) {
 
 export default function App() {
   //nested destructuring.. WOW WOW Learnt this today
-  const [{ questions, status, index, answer }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index, answer }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
   //normal destructuring
   // const {questions, status} = state
 
- 
   const numQuestions = questions.length;
 
   useEffect(() => {
     fetch("http://localhost:8000/questions")
       .then((res) => res.json())
       .then((data) => {
-        dispatch({ type: "dataReceived", payload: { questions: data } })
-      }
-      )
+        dispatch({ type: "dataReceived", payload: { questions: data } });
+      })
       .catch((err) => dispatch({ type: "dataFailed" }));
   }, []);
 
@@ -79,8 +88,26 @@ export default function App() {
         {/* mutually exclusive, meaning only one will be true */}
         {status === "loading" && <Loader />}
         {status === "error" && <Error />}
-        {status === "ready" && <StartScreen numQuestions={numQuestions} dispatch={dispatch} />}
-        {status === "active" && <Question question={questions[index]} dispatch={dispatch} answer={answer} />}
+        {status === "ready" && (
+          <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
+        )}
+        {status === "active" && (
+          <>
+            <Question
+              question={questions[index]}
+              dispatch={dispatch}
+              answer={answer}
+            />
+            {answer !== null && (
+              <button
+                className="btn btn-ui"
+                onClick={() => dispatch({ type: "nextQuestion" })}
+              >
+                Next
+              </button>
+            )}
+          </>
+        )}
       </Main>
     </div>
   );
