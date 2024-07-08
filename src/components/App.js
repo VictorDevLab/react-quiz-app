@@ -7,10 +7,12 @@ import Error from "./Error";
 import StartScreen from "./StartScreen";
 import Question from "./Question";
 import Progress from "./Progress";
+import FinishScreen from "./FinishScreen";
+import NextButton from "./NextButton";
 
 const initialState = {
   questions: [],
-  //loading, ready, error, active, finished.
+  //loading, ready, error, active,.
   status: "loading",
   //index of question you are on
   index: 0,
@@ -57,6 +59,12 @@ function reducer(state, action) {
         answer: null,
       };
     }
+    case "finishQuiz": {
+      return {
+        ...state,
+        status: "finished",
+      };
+    }
     default:
       throw new Error("action unknown");
   }
@@ -64,7 +72,7 @@ function reducer(state, action) {
 
 export default function App() {
   //nested destructuring.. WOW WOW Learnt this today
-  const [{ questions, status, index, answer }, dispatch] = useReducer(
+  const [{ questions, status, index, answer, points }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -72,7 +80,10 @@ export default function App() {
   // const {questions, status} = state
 
   const numQuestions = questions.length;
-
+  const totalPossiblePoints = questions.reduce(
+    (prev, cur) => prev + cur.points,
+    0
+  );
   useEffect(() => {
     fetch("http://localhost:8000/questions")
       .then((res) => res.json())
@@ -94,21 +105,28 @@ export default function App() {
         )}
         {status === "active" && (
           <>
-            <Progress numQuestions={numQuestions} index={index} />
+            <Progress
+              numQuestions={numQuestions}
+              index={index}
+              points={points}
+              totalPossiblePoints={totalPossiblePoints}
+            />
             <Question
               question={questions[index]}
               dispatch={dispatch}
               answer={answer}
             />
-            {answer !== null && (
-              <button
-                className="btn btn-ui"
-                onClick={() => dispatch({ type: "nextQuestion" })}
-              >
-                Next
-              </button>
+            {answer !== null && index < 14 && (
+              <NextButton dispatch={dispatch} />
             )}
+            {answer !== null && index === 14 && <NextButton />}
           </>
+        )}
+        {status === "finished" && (
+          <FinishScreen
+            points={points}
+            totalPossiblePoints={totalPossiblePoints}
+          />
         )}
       </Main>
     </div>
