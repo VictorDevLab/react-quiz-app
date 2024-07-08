@@ -18,7 +18,7 @@ const initialState = {
   index: 0,
   answer: null,
   points: 0,
-  highSchore: 0,
+  highScore: 0,
 };
 
 function reducer(state, action) {
@@ -64,8 +64,8 @@ function reducer(state, action) {
       return {
         ...state,
         status: "finished",
-        highSchore:
-          state.points > state.highSchore ? state.points : state.highSchore,
+        highScore:
+          state.points > state.highScore ? state.points : state.highScore,
       };
     }
     default:
@@ -75,7 +75,7 @@ function reducer(state, action) {
 
 export default function App() {
   //nested destructuring.. WOW WOW Learnt this today
-  const [{ questions, status, index, answer, points, highSchore }, dispatch] =
+  const [{ questions, status, index, answer, points, highScore }, dispatch] =
     useReducer(reducer, initialState);
   //normal destructuring
   // const {questions, status} = state
@@ -122,6 +122,7 @@ export default function App() {
               dispatch={dispatch}
               index={index}
               numQuestions={numQuestions}
+              answer={answer}
             />
           </>
         )}
@@ -129,7 +130,7 @@ export default function App() {
           <FinishScreen
             points={points}
             totalPossiblePoints={totalPossiblePoints}
-            highSchore={highSchore}
+            highScore={highScore}
           />
         )}
       </Main>

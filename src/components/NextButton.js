@@ -1,7 +1,7 @@
 function NextButton({ dispatch, answer, numQuestions, index }) {
   //mutually exculusive
   if (answer === null) return null;
-  if (index < numQuestions - 1)
+  if (answer !== null && index < numQuestions - 1)
     return (
       <button
         className="btn btn-ui"
