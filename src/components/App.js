@@ -9,6 +9,10 @@ import Question from "./Question";
 import Progress from "./Progress";
 import FinishScreen from "./FinishScreen";
 import NextButton from "./NextButton";
+import Timer from "./Timer";
+import Footer from "./Footer";
+
+const SECS_PER_QUESTION = 30;
 
 const initialState = {
   questions: [],
@@ -19,6 +23,7 @@ const initialState = {
   answer: null,
   points: 0,
   highScore: 0,
+  secondsRemaining: null,
 };
 
 function reducer(state, action) {
@@ -38,6 +43,7 @@ function reducer(state, action) {
       return {
         ...state,
         status: "active",
+        secondsRemaining: state.questions.length * SECS_PER_QUESTION,
       };
     }
     case "newAnswer": {
@@ -75,6 +81,13 @@ function reducer(state, action) {
         status: "ready",
       };
     }
+    case "tick": {
+      return {
+        ...state,
+        secondsRemaining: state.secondsRemaining - 1,
+        status: state.secondsRemaining === 0 ? "finished" : "active",
+      };
+    }
     default:
       throw new Error("action unknown");
   }
@@ -82,8 +95,10 @@ function reducer(state, action) {
 
 export default function App() {
   //nested destructuring.. WOW WOW Learnt this today
-  const [{ questions, status, index, answer, points, highScore }, dispatch] =
-    useReducer(reducer, initialState);
+  const [
+    { questions, status, index, answer, points, highScore, secondsRemaining },
+    dispatch,
+  ] = useReducer(reducer, initialState);
   //normal destructuring
   // const {questions, status} = state
 
@@ -124,13 +139,15 @@ export default function App() {
               dispatch={dispatch}
               answer={answer}
             />
-
-            <NextButton
-              dispatch={dispatch}
-              index={index}
-              numQuestions={numQuestions}
-              answer={answer}
-            />
+            <Footer>
+              <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
+              <NextButton
+                dispatch={dispatch}
+                index={index}
+                numQuestions={numQuestions}
+                answer={answer}
+              />
+            </Footer>
           </>
         )}
         {status === "finished" && (
