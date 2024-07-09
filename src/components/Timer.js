@@ -2,7 +2,9 @@ import { useEffect } from "react";
 
 function Timer({ dispatch, secondsRemaining }) {
   //must place the timer in one of the components that mounts when the game starts
-
+  const mins = Math.floor(secondsRemaining / 60);
+  //cool stuff huh?
+  const secs = secondsRemaining % 60;
   useEffect(
     function () {
       //id is generated for every interval?
@@ -15,7 +17,13 @@ function Timer({ dispatch, secondsRemaining }) {
     [dispatch]
   );
 
-  return <div className="timer">{secondsRemaining}</div>;
+  return (
+    <div className="timer">
+      {mins < 10 && "0"}
+      {mins} : {secs < 10 && "0"}
+      {secs}
+    </div>
+  );
 }
 
 export default Timer;
