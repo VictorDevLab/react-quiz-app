@@ -18,7 +18,7 @@ const SECS_PER_QUESTION = 30;
 
 const initialState = {
   questions: [],
-  //loading, ready, error, active,.
+  //loading, ready, error, active,finished.
   status: "loading",
   //index of question you are on
   index: 0,
@@ -96,6 +96,7 @@ function reducer(state, action) {
 }
 
 export default function App() {
+  //so basically everything you have in the initial state should be destructured.
   //nested destructuring.. WOW WOW Learnt this today
   const [
     { questions, status, index, answer, points, highScore, secondsRemaining },
@@ -121,6 +122,7 @@ export default function App() {
   return (
     <div className="app">
       <Header />
+      {/* //for component composition */}
       <Main>
         {/* mutually exclusive, meaning only one will be true */}
         {status === "loading" && <Loader />}
