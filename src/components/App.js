@@ -5,8 +5,10 @@ import Main from "./Main";
 import Loader from "./Loader";
 import Error from "./Error";
 import StartScreen from "./StartScreen";
+//to display every Question
 import Question from "./Question";
 import Progress from "./Progress";
+//after the game is over
 import FinishScreen from "./FinishScreen";
 import NextButton from "./NextButton";
 import Timer from "./Timer";
