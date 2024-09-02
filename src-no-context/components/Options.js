@@ -1,8 +1,6 @@
-import { UseQuiz } from "../contexts/QuizContext";
-
-function Options({question}) {
+function Options({ question, answer, dispatch }) {
   //this kind of abstraction
- const { answer, dispatch } = UseQuiz()
+
   const hasAnswered = answer !== null;
 
   return (

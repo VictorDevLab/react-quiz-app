@@ -1,8 +1,5 @@
-import { UseQuiz } from "../contexts/QuizContext";
-
-function FinishScreen() {
-  const { points, totalPossiblePoints, highScore, dispatch } = UseQuiz()
-    const perecent = (points / totalPossiblePoints) * 100;
+function FinishScreen({ points, totalPossiblePoints, highScore, dispatch }) {
+  const perecent = (points / totalPossiblePoints) * 100;
   return (
     <div>
       <p className="result">

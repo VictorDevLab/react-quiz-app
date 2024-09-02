@@ -1,8 +1,5 @@
-import { UseQuiz } from "../contexts/QuizContext";
-
-function NextButton() {
-  const { dispatch, answer, numQuestions, index } = UseQuiz() 
-   //mutually exculusive
+function NextButton({ dispatch, answer, numQuestions, index }) {
+  //mutually exculusive
 
   //when the user has not selected an answer, no button will be displayed
   if (answer === null) return null;

@@ -1,9 +1,6 @@
 import { useEffect } from "react";
-import { UseQuiz } from "../contexts/QuizContext";
 
-function Timer() {
-
-  const { dispatch, secondsRemaining } = UseQuiz()
+function Timer({ dispatch, secondsRemaining }) {
   //must place the timer in one of the components that mounts when the game starts
   const mins = Math.floor(secondsRemaining / 60);
   //cool stuff huh?
